@@ -1,0 +1,128 @@
+Terminal 1:
+source /opt/ros/humble/setup.bash
+ros2 run turtlesim turtlesim_node
+
+Terminal 2:
+source /opt/ros/humble/setup.bash
+ros2 run turtlesim turtle_teleop_key
+
+Terminal 3:
+source /opt/ros/humble/setup.bash
+rqt_graph
+
+https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Topics/Understanding-ROS2-Topics.html
+
+
+Comandos
+run
+ejecutar un nodo
+
+TOPICS
+los topics usan el modelo publisher-subscriber, donde puede haber uno o mas publishers publicando informacion a uno o mas subscribers. Se puede programar un topic para que se publique periodicamente informacion
+
+topic list
+ver los topics activos
+
+topic echo
+ver los datos publicados en un topic
+
+topic info
+ver cantidad de publishers y subscribers de un topic
+
+interface show <topic>
+ver el formato de mensaje de un topic
+
+topic pub <topic_name> <msg_type> '<args>'
+publicar datos en un topic. 
+Ejemplos:
+publicar un mensaje (--once)
+ros2 topic pub --once /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+publicar a 1Hz (--rate 1)
+ros2 topic pub --rate 1 /turtle1/cmd_vel geometry_msgs/msg/Twist "{linear: {x: 2.0, y: 0.0, z: 0.0}, angular: {x: 0.0, y: 0.0, z: 1.8}}"
+
+topic hz
+ver la velocidad a la que se esta publicando en un topic
+
+SERVICES
+los servicios usan un modelo cliente-servidor, donde un unico servidor provee el servicio a uno o mas clientes, en el momento en que se requiere
+https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Services/Understanding-ROS2-Services.html
+
+service list
+ver la lista de los servicios activos
+
+service type <service_name>
+ver el formato de mensaje de la call y la response de un servicio
+
+service list -t
+ver los tipos de todos los servicios activos
+
+service find <type_name>
+ver los servicios de un tipo especifico
+
+interface show <type_name>
+lo mismo que para topics, muestra el formato de los mensajes 
+
+ros2 service call <service_name> <service_type> <arguments>
+llamar a un servicio
+Ejemplos:
+limpia las lineas de la pantalla turtlesim
+ros2 service call /clear std_srvs/srv/Empty 
+crear una nueva tortuga
+ros2 service call /spawn turtlesim/srv/Spawn "{x: 2, y: 2, theta: 0.2, name: ''}"
+
+PARAMETROS
+los parametros son los valores de configuracion de los nodos. Pueden ser de tipo entero, reales, booleanos, strings y listas. Cada nodo tiene sus propios parametros.
+
+ros2 param list
+ver lista de parametros de los nodos activos
+
+ros2 param get <node_name> <parameter_name>
+mostrar el tipo y valor actual de un parametro
+
+ros2 param set <node_name> <parameter_name> <value>
+cambiar el valor de un parametro
+
+ros2 param dump <node_name>
+ver los valores de todos los parametros de un nodo
+
+ros2 param load <node_name> <parameter_file>
+cargar los parametros desde un archivo
+
+ros2 run <package_name> <executable_name> --ros-args --params-file <file_name>
+lanzar un nodo cargando los parametros desde un archivo
+
+ACTIONS
+Se usan las acciones para tareas largas, que no son instantáneas: llevan un proceso que consiste en tres partes: fijar una meta, recibir realimentación del estado de completitud de la tarea, y un resultado. El modelo que se usa es el de cliente-servidor. Un cliente envia una meta aun servidor que acepta la tarea y va actualizando el cumplimiento de la meta, y un resultado final.
+
+ros2 node info
+da toda la información de un nodo, incluyendo sus servidores y clientes de acciones
+
+ros2 action list
+muestra las acciones en el ROS graph
+
+ros2 action list -t
+muestra las acciones y sus tipos asociados
+
+ros2 action info <action_name>
+muestra los clientes y servidores activos de una accion
+Ejemplo: ros2 action info /turtle1/rotate_absolute
+
+ros2 interface show <type_name>
+muestra la estructura de un tipo, en este caso de una accion
+Ejemplo: ros2 interface show turtlesim/action/RotateAbsolute
+
+ros2 action send_goal <action_name> <action_type> <values>
+manda a realizar una accion, con una meta establecida
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: 1.57}"
+agregando --feedback va enviando actualizaciones del estado de cumplimiento de la meta
+ros2 action send_goal /turtle1/rotate_absolute turtlesim/action/RotateAbsolute "{theta: -1.57}" --feedback
+
+PARA VER LOG DE MENSAJES DEL SISTEMA (GUI)
+rqt_console
+
+ROS LAUNCH
+permite ejecutar multiples nodos de una sola vez, tomando la configuracion de un archivo
+
+
+SIGUIENTE: seguir con el tutorial Beginner: Client Libraries
+https://docs.ros.org/en/humble/Tutorials/Beginner-Client-Libraries/Colcon-Tutorial.html
