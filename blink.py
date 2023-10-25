@@ -1,3 +1,6 @@
+# Prueba de control de hardware desde la Raspberry Pi 400
+# usa la placa de expansión de GPIO
+
 import RPi.GPIO as gpio
 import time
 
